@@ -192,6 +192,11 @@ claude "用 Python 写一个快速排序算法"
 
 ## 🔄 版本更新
 
+### v3.0.3 (2025-12-17)
+- **✨ Refresh Token 批量导入**: 支持 JSON 数组和 Regex 智能提取，一次性导入多个账号
+- **🐛 修复 Claude CLI 空响应**: 彻底解决 `MALFORMED_FUNCTION_CALL` 和 `thoughtSignature` 导致的空文本问题
+- **⚡ API 代理优化**: 提升 maxOutputTokens 至 16384，优化 403 错误处理
+
 ### v3.0.2 (2025-12-17)
 
 #### 🔧 API 代理优化
