@@ -456,6 +456,43 @@ print(response.text)`;
                                 </div>
                             </div>
 
+                            {/* 局域网访问开关 */}
+                            <div className="border-t border-gray-200 dark:border-base-300 pt-3 mt-3">
+                                <label className="flex items-start gap-3 cursor-pointer">
+                                    <div className="relative flex-shrink-0 mt-0.5">
+                                        <input
+                                            type="checkbox"
+                                            className="sr-only"
+                                            checked={appConfig.proxy.allow_lan_access || false}
+                                            onChange={(e) => updateProxyConfig({ allow_lan_access: e.target.checked })}
+                                            disabled={status.running}
+                                        />
+                                        <div className={`block w-10 h-6 rounded-full transition-colors ${(appConfig.proxy.allow_lan_access || false) ? 'bg-blue-500' : 'bg-gray-300 dark:bg-base-300'}`}></div>
+                                        <div className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${(appConfig.proxy.allow_lan_access || false) ? 'transform translate-x-4' : ''}`}></div>
+                                    </div>
+                                    <div className="flex-1">
+                                        <span className="text-xs font-medium text-gray-900 dark:text-base-content">
+                                            {t('proxy.config.allow_lan_access') || '允许局域网访问'}
+                                        </span>
+                                        <p className="mt-0.5 text-[10px] text-gray-500 dark:text-gray-400">
+                                            {(appConfig.proxy.allow_lan_access || false)
+                                                ? '🌐 监听 0.0.0.0，局域网设备可访问'
+                                                : '🔒 仅监听 127.0.0.1，仅本机可访问（隐私优先）'}
+                                        </p>
+                                        {(appConfig.proxy.allow_lan_access || false) && (
+                                            <p className="mt-1 text-[10px] text-amber-600 dark:text-amber-500">
+                                                ⚠️ 开启后局域网内其他设备可访问，请确保 API 密钥安全
+                                            </p>
+                                        )}
+                                        {status.running && (
+                                            <p className="mt-1 text-[10px] text-blue-600 dark:text-blue-400">
+                                                ℹ️ 需要重启服务后生效
+                                            </p>
+                                        )}
+                                    </div>
+                                </label>
+                            </div>
+
                             {/* API 密钥 */}
                             {/* API 密钥 */}
                             <div>
@@ -527,7 +564,7 @@ print(response.text)`;
                                 <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-2">
                                     <Layers size={14} /> {t('proxy.router.group_title')}
                                 </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
                                     {/* Claude 4.5 系列 */}
                                     <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 p-3 rounded-xl border border-blue-100 dark:border-blue-800/30 relative overflow-hidden group hover:border-blue-400 transition-all duration-300">
                                         <div className="flex items-center gap-3 mb-3">
@@ -617,23 +654,13 @@ print(response.text)`;
                                             onChange={(e) => handleMappingUpdate('openai', 'gpt-4-series', e.target.value)}
                                         >
                                             <option value="">gemini-3-pro-high (Default)</option>
-                                            <optgroup label="Claude 4.5">
-                                                <option value="claude-opus-4-5-thinking">claude-opus-4-5-thinking</option>
-                                                <option value="claude-sonnet-4-5">claude-sonnet-4-5</option>
-                                                <option value="claude-sonnet-4-5-thinking">claude-sonnet-4-5-thinking</option>
-                                            </optgroup>
-                                            <optgroup label="Gemini 3">
-                                                <option value="gemini-3-pro-high">gemini-3-pro-high</option>
-                                                <option value="gemini-3-pro-low">gemini-3-pro-low</option>
-                                                <option value="gemini-3-flash">gemini-3-flash</option>
-                                            </optgroup>
-                                            <optgroup label="Gemini 2.5">
-                                                <option value="gemini-2.5-pro">gemini-2.5-pro</option>
-                                                <option value="gemini-2.5-flash">gemini-2.5-flash</option>
-                                                <option value="gemini-2.5-flash-thinking">gemini-2.5-flash-thinking</option>
-                                                <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite</option>
+                                            <optgroup label="Gemini 3 (推荐)">
+                                                <option value="gemini-3-pro-high">gemini-3-pro-high (高质量)</option>
+                                                <option value="gemini-3-pro-low">gemini-3-pro-low (均衡)</option>
+                                                <option value="gemini-3-flash">gemini-3-flash (快速)</option>
                                             </optgroup>
                                         </select>
+                                        <p className="mt-1 text-[9px] text-indigo-500">⚠️ 仅支持 Gemini 3 系列</p>
                                     </div>
 
                                     {/* GPT-4o / 3.5 系列 */}
@@ -653,23 +680,39 @@ print(response.text)`;
                                             onChange={(e) => handleMappingUpdate('openai', 'gpt-4o-series', e.target.value)}
                                         >
                                             <option value="">gemini-3-flash (Default)</option>
-                                            <optgroup label="Claude 4.5">
-                                                <option value="claude-opus-4-5-thinking">claude-opus-4-5-thinking</option>
-                                                <option value="claude-sonnet-4-5">claude-sonnet-4-5</option>
-                                                <option value="claude-sonnet-4-5-thinking">claude-sonnet-4-5-thinking</option>
-                                            </optgroup>
-                                            <optgroup label="Gemini 3">
-                                                <option value="gemini-3-pro-high">gemini-3-pro-high</option>
-                                                <option value="gemini-3-pro-low">gemini-3-pro-low</option>
-                                                <option value="gemini-3-flash">gemini-3-flash</option>
-                                            </optgroup>
-                                            <optgroup label="Gemini 2.5">
-                                                <option value="gemini-2.5-pro">gemini-2.5-pro</option>
-                                                <option value="gemini-2.5-flash">gemini-2.5-flash</option>
-                                                <option value="gemini-2.5-flash-thinking">gemini-2.5-flash-thinking</option>
-                                                <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite</option>
+                                            <optgroup label="Gemini 3 (推荐)">
+                                                <option value="gemini-3-flash">gemini-3-flash (快速)</option>
+                                                <option value="gemini-3-pro-high">gemini-3-pro-high (高质量)</option>
+                                                <option value="gemini-3-pro-low">gemini-3-pro-low (均衡)</option>
                                             </optgroup>
                                         </select>
+                                        <p className="mt-1 text-[9px] text-emerald-600">⚠️ 仅支持 Gemini 3 系列</p>
+                                    </div>
+
+                                    {/* GPT-5 系列 */}
+                                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 p-3 rounded-xl border border-amber-100 dark:border-amber-800/30 relative overflow-hidden group hover:border-amber-400 transition-all duration-300">
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <div className="w-8 h-8 rounded-lg bg-amber-600 flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
+                                                <Zap size={16} />
+                                            </div>
+                                            <div>
+                                                <div className="text-xs font-bold text-gray-900 dark:text-base-content">GPT-5 系列</div>
+                                                <div className="text-[10px] text-gray-500 line-clamp-1">GPT-5.1, GPT-5.2 xhigh</div>
+                                            </div>
+                                        </div>
+                                        <select
+                                            className="select select-sm select-bordered w-full font-mono text-[11px] bg-white/80 dark:bg-base-100/80 backdrop-blur-sm"
+                                            value={appConfig.proxy.openai_mapping?.["gpt-5-series"] || ""}
+                                            onChange={(e) => handleMappingUpdate('openai', 'gpt-5-series', e.target.value)}
+                                        >
+                                            <option value="">gemini-3-flash (Default)</option>
+                                            <optgroup label="Gemini 3 (推荐)">
+                                                <option value="gemini-3-flash">gemini-3-flash (快速)</option>
+                                                <option value="gemini-3-pro-high">gemini-3-pro-high (高质量)</option>
+                                                <option value="gemini-3-pro-low">gemini-3-pro-low (均衡)</option>
+                                            </optgroup>
+                                        </select>
+                                        <p className="mt-1 text-[9px] text-amber-600">⚠️ 仅支持 Gemini 3 系列</p>
                                     </div>
                                 </div>
                             </div>
@@ -794,11 +837,30 @@ print(response.text)`;
                                 >
                                     <div className="flex items-center justify-between mb-2">
                                         <span className="text-xs font-bold text-blue-600">{t('proxy.multi_protocol.openai_label')}</span>
-                                        <button onClick={(e) => { e.stopPropagation(); copyToClipboard(`${status.base_url}/v1/chat/completions`, 'openai'); }} className="btn btn-ghost btn-xs">
-                                            {copied === 'openai' ? <CheckCircle size={14} /> : <Copy size={14} />}
+                                        <button onClick={(e) => { e.stopPropagation(); copyToClipboard(`${status.base_url}/v1`, 'openai'); }} className="btn btn-ghost btn-xs">
+                                            {copied === 'openai' ? <CheckCircle size={14} /> : <div className="flex items-center gap-1 text-[10px]"><Copy size={12} /> Base</div>}
                                         </button>
                                     </div>
-                                    <code className="text-[10px] block truncate bg-black/5 dark:bg-white/5 p-1 rounded">/v1/chat/completions</code>
+                                    <div className="space-y-1">
+                                        <div className="flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5 rounded p-0.5 group">
+                                            <code className="text-[10px] opacity-70">/v1/chat/completions</code>
+                                            <button onClick={(e) => { e.stopPropagation(); copyToClipboard(`${status.base_url}/v1/chat/completions`, 'openai-chat'); }} className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                                {copied === 'openai-chat' ? <CheckCircle size={10} className="text-green-500" /> : <Copy size={10} />}
+                                            </button>
+                                        </div>
+                                        <div className="flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5 rounded p-0.5 group">
+                                            <code className="text-[10px] opacity-70">/v1/completions</code>
+                                            <button onClick={(e) => { e.stopPropagation(); copyToClipboard(`${status.base_url}/v1/completions`, 'openai-compl'); }} className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                                {copied === 'openai-compl' ? <CheckCircle size={10} className="text-green-500" /> : <Copy size={10} />}
+                                            </button>
+                                        </div>
+                                        <div className="flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5 rounded p-0.5 group">
+                                            <code className="text-[10px] opacity-70 font-bold text-blue-500">/v1/responses (Codex)</code>
+                                            <button onClick={(e) => { e.stopPropagation(); copyToClipboard(`${status.base_url}/v1/responses`, 'openai-resp'); }} className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                                {copied === 'openai-resp' ? <CheckCircle size={10} className="text-green-500" /> : <Copy size={10} />}
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* Anthropic Card */}
